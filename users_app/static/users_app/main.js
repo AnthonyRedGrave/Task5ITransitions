@@ -66,7 +66,7 @@ delete_button.addEventListener('click', function(e){
     })
         }
     }
-    window.location.href = 'https://taskitransition5.herokuapp.com'
+    window.location.href = 'https://taskitransition5.herokuapp.com/accounts/login/'
 
 })
 
@@ -75,7 +75,7 @@ block_button.addEventListener('click', function(e){
     const checkboxes =  document.getElementsByClassName('checkall')
     for (var i = 0; i< checkboxes.length; i++){
         if(checkboxes[i].checked == true){
-            var ban_url = `taskitransition5.herokuapp.com/api/users/${checkboxes[i].value}/`
+            var ban_url = `https://taskitransition5.herokuapp.com/api/users/${checkboxes[i].value}/`
             var data = {"status": "Banned"}
             $.ajax({
                 type: 'PATCH',
