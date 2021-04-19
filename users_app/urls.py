@@ -8,7 +8,7 @@ router.register(r'api/users', UserProfileApiView)
 
 
 urlpatterns = [
-    path('users/', UsersListView.as_view(), name='users_list'),
+    path('', UsersListView.as_view(), name='users_list'),
     path('users/delete/<int:pk>/', user_delete, name='delete'),
     path('accounts/login/', LoginView.as_view(), name = 'login'),
     path('logout/', LogoutView.as_view(next_page = 'users_list'), name = 'logout'),
