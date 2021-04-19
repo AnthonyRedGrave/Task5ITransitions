@@ -13,13 +13,13 @@
 <form action="" method="post">
     {% csrf_token %}
     <input type="submit" class="btn btn-light delete_button" value="Удалить">
+    <input type="submit" class="btn btn-light block_button" value="Заблокировать">
+    <input type="submit" class="btn btn-light unblock_button" value="Раблокировать">
 </form>
-
-
-  <table class="table">
+<table class="table" id="table_users">
     <thead>
     <tr>
-      <th><input id="main_checkbox" onclick="toggle(this)" type="checkbox"></th>
+      <th><input onclick="toggle(this)" type="checkbox"></th>
       <th scope="col">ID</th>
       <th scope="col">Имя</th>
       <th scope="col">Адрес электронной почты</th>
@@ -28,27 +28,7 @@
       <th scope="col">Статус</th>
     </tr>
     </thead>
-    <tbody>
-    {% for user in users %}
-    <tr>
-        <td><input type="checkbox" class="checkall" id="checks" name="checks[]" value="{{user.user.id}}"></td>
-        <td>{{user.user.id}}</td>
-        <td>{{user.user}}</td>
-        {% if user.user.email %}
-        <td>{{user.user.email}}</td>
-        {% else %}
-        <td>Не указан</td>
-        {% endif %}
-        <td>{{user.user.date_joined}}</td>
-        {% if user.user.last_login %}
-        <td>{{user.user.last_login}}</td>
-        {% else %}
-        <td>Заходил давно</td>
-        {% endif %}
-        <td>{{user.get_status_display}}</td>
-
-      {% endfor %}
-    </tbody>
-  </table>
+    <tbody id="table_body"></tbody>
+</table>
 
 {% endblock %}

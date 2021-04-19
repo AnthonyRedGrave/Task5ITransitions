@@ -2,18 +2,22 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.views.generic import View
 from rest_framework.response import Response
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import LoginForm, RegisterForm
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import reverse, redirect
 from .models import UserProfile
-from rest_framework.generics import ListCreateAPIView
 from rest_framework.viewsets import ModelViewSet
 from .serializers import UserProfileSerializer
 from rest_framework.decorators import api_view
+from django.contrib import messages
 
-class UsersListView(View):
+
+class UsersListView(LoginRequiredMixin, View):
     def get(self, request):
+        # user_profile = UserProfile.objects.get(user = request.user)
+        # if user_profile.status == 'Banned':
+        #     logout(request)
         users = UserProfile.objects.all()
         return render(request, 'users_app/users_list.html', context={
             'users': users
@@ -33,8 +37,17 @@ class LoginView(View):
             password = login_form.cleaned_data['password']
             user = authenticate(username=username, password=password)
             if user:
+                if UserProfile.objects.get(user=user).status == 'Banned':
+                    messages.error(request, 'Вы заблокированы!')
+                    return redirect('login')
+
                 login(request, user)
                 return redirect('users_list')
+        username = login_form.cleaned_data['username']
+        if not User.objects.filter(username = username).exists():
+            print('asd')
+            messages.error(request, f'Пользователя с логином {username} не существует!')
+        return redirect('login')
 
 
 class RegisterView(View):
@@ -58,26 +71,31 @@ class RegisterView(View):
             login(request, user)
             return redirect('users_list')
 
-        context = {'register_form': register_form}
+        context = {'form': register_form}
         return render(request, 'auth/registration.html', context)
-
-
-class DeleteUserView(View):
-    def post(self, request):
-        print(request.POST.getlist('checks'))
-        return redirect('users_list')
 
 
 @api_view(['DELETE'])
 def user_delete(request, pk):
-    user_profile = UserProfile.objects.get(id = pk)
-    user = User.objects.get(id = user_profile.user.id)
-    print(user)
-    # user.delete()
-    return Response('Успешно удалено!')
+    user_profile = UserProfile.objects.get(user = request.user)
+    if pk == user_profile.id:
+        logout(request)
+    user_profile.delete()
+    user_profile.user.delete()
+    return Response('Удалено')
 
 
+class UserProfileApiView(ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
 
-# class UserProfileApiView(ModelViewSet):
-#     queryset = UserProfile.objects.all()
-#     serializer_class = UserProfileSerializer
+    def update(self, request, *args, **kwargs):
+        if request.method == 'PATCH':
+            instance = self.get_object()
+            if instance.user.id == request.user.id and request.data['status'] == 'Banned':
+                logout(request)
+            serializer = self.get_serializer(instance, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+        return Response('Wrong!')

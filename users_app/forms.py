@@ -18,12 +18,13 @@ class LoginForm(forms.ModelForm):
         password = self.cleaned_data['password']
 
         if not User.objects.filter(username = username).exists():
-            forms.ValidationError("Пользователь с логином {} не найден".format(username))
+            raise forms.ValidationError("Пользователь с логином {} не найден".format(username))
 
         user = User.objects.filter(username = username).first()
         if user:
             if not user.check_password(password):
                 raise forms.ValidationError("Неверный пароль")
+
         return self.cleaned_data
 
     class Meta:
@@ -43,7 +44,6 @@ class RegisterForm(forms.ModelForm):
         self.fields['confirm_password'].label = 'Подтверждение пароля'
         self.fields['email'].label = 'Адрес электронной почты'
 
-
     def clean_email(self):
         email = self.cleaned_data['email']
         domain_name = email.split('.')[-1]
@@ -56,6 +56,7 @@ class RegisterForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data['username']
         if User.objects.filter(username = username).exists():# если пользователь с таким именем уже существует
+            print(User.objects.filter(username = username))
             raise forms.ValidationError("Пользователь с таким логином уже существует")
         return username
 
