@@ -66,7 +66,7 @@ delete_button.addEventListener('click', function(e){
     })
         }
     }
-    window.location.href = 'https://taskitransition5.herokuapp.com/accounts/login/'
+//    window.location.href = 'https://taskitransition5.herokuapp.com/accounts/login/'
 
 })
 
