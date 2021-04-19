@@ -73,12 +73,13 @@ class RegisterView(View):
 
 @api_view(['DELETE'])
 def user_delete(request, pk):
+    user_profile_to_del = UserProfile.objects.get(id = pk)
     user_profile = UserProfile.objects.get(user = request.user)
-    if pk == user_profile.id:
+    if user_profile == user_profile_to_del:
         logout(request)
-    user_profile.delete()
-    user_profile.user.delete()
-    return redirect('users_list')
+    user_profile_to_del.delete()
+    user_profile_to_del.user.delete()
+    return Response('Удалено')
 
 
 class UserProfileApiView(ModelViewSet):
