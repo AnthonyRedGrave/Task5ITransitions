@@ -5,7 +5,7 @@ function toggle(source) {
     }
 }
 
-var url = 'taskitransition5.herokuapp.com/api/users/'
+var url = 'https://taskitransition5.herokuapp.com/api/users/'
 const csrf = document.getElementsByName('csrfmiddlewaretoken')
 
 function builtTable(){
@@ -47,7 +47,7 @@ delete_button.addEventListener('click', function(e){
     const checkboxes =  document.getElementsByClassName('checkall')
     for (var i = 0; i< checkboxes.length; i++){
         if(checkboxes[i].checked == true){
-            var delete_url = `taskitransition5.herokuapp.com/users/delete/${checkboxes[i].value}/`
+            var delete_url = `https://taskitransition5.herokuapp.com/users/delete/${checkboxes[i].value}/`
             $.ajax({
                 type: 'DELETE',
                 url: delete_url,
@@ -66,7 +66,7 @@ delete_button.addEventListener('click', function(e){
     })
         }
     }
-    window.location.href = 'taskitransition5.herokuapp.com/users/'
+    window.location.href = 'https://taskitransition5.herokuapp.com/users/'
 
 })
 
@@ -96,7 +96,7 @@ block_button.addEventListener('click', function(e){
     })
     }
         }
-        window.location.href = 'taskitransition5.herokuapp.com/users/'
+        window.location.href = 'https://taskitransition5.herokuapp.com/users/'
 
     })
 
@@ -106,7 +106,7 @@ unblock_button.addEventListener('click', function(e){
     const checkboxes =  document.getElementsByClassName('checkall')
     for (var i = 0; i< checkboxes.length; i++){
         if(checkboxes[i].checked == true){
-            var ban_url = `taskitransition5.herokuapp.com/api/users/${checkboxes[i].value}/`
+            var ban_url = `https://taskitransition5.herokuapp.com/api/users/${checkboxes[i].value}/`
             var data = {"status": "Unbanned"}
             $.ajax({
                 type: 'PATCH',
@@ -127,6 +127,6 @@ unblock_button.addEventListener('click', function(e){
     })
     }
         }
-        window.location.href = 'taskitransition5.herokuapp.com/users/'
+        window.location.href = 'https://taskitransition5.herokuapp.com/users/'
 
     })
