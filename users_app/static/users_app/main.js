@@ -76,7 +76,7 @@ block_button.addEventListener('click', function(e){
     for (var i = 0; i< checkboxes.length; i++){
         if(checkboxes[i].checked == true){
             var ban_url = `taskitransition5.herokuapp.com/api/users/${checkboxes[i].value}/`
-            var data = {"status": "Banned"}`
+            var data = {"status": "Banned"}
             $.ajax({
                 type: 'PATCH',
                 data: JSON.stringify(data),
