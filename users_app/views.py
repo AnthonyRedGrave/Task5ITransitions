@@ -15,9 +15,6 @@ from django.contrib import messages
 
 class UsersListView(LoginRequiredMixin, View):
     def get(self, request):
-        # user_profile = UserProfile.objects.get(user = request.user)
-        # if user_profile.status == 'Banned':
-        #     logout(request)
         users = UserProfile.objects.all()
         return render(request, 'users_app/users_list.html', context={
             'users': users
@@ -45,7 +42,6 @@ class LoginView(View):
                 return redirect('users_list')
         username = login_form.cleaned_data['username']
         if not User.objects.filter(username = username).exists():
-            print('asd')
             messages.error(request, f'Пользователя с логином {username} не существует!')
         return redirect('login')
 
@@ -82,7 +78,7 @@ def user_delete(request, pk):
         logout(request)
     user_profile.delete()
     user_profile.user.delete()
-    return Response('Удалено')
+    return redirect('users_list')
 
 
 class UserProfileApiView(ModelViewSet):
